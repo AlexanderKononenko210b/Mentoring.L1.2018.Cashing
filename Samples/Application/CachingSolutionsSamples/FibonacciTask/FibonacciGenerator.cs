@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CachingSolutionsSamples.FibonacciTask
 {
@@ -11,22 +12,27 @@ namespace CachingSolutionsSamples.FibonacciTask
         /// Fibonacci generator.
         /// </summary>
         /// <param name="boarder">The boarder.</param>
+        /// <param name="firstNumber">The first input number.</param>
+        /// <param name="secondNumber">The second input number.</param>
         /// <returns>The <see cref="IEnumerable{int}"/></returns>
-        public static IEnumerable<int> Generate(int boarder)
+        public static IEnumerable<int> Generate(int boarder, int firstNumber, int secondNumber)
         {
-            var firstNumber = 1;
+            if (secondNumber == 0 || firstNumber == 0)
+            {
+                firstNumber = 0;
 
-            yield return firstNumber;
+                yield return firstNumber;
 
-            if (boarder <= firstNumber)
-                yield break;
+                if (boarder <= firstNumber)
+                    yield break;
 
-            var secondNumber = 1;
+                secondNumber = 1;
 
-            yield return secondNumber;
+                yield return secondNumber;
 
-            if (boarder <= secondNumber)
-                yield break;
+                if (boarder <= secondNumber)
+                    yield break;
+            }
 
             var summ = firstNumber + secondNumber;
 

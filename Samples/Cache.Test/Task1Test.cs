@@ -23,6 +23,7 @@ namespace Cache.Test
         [TestCase(223415)]
         [TestCase(35)]
         [TestCase(115)]
+        [TestCase(223415)]
         public void FibonacciRedis(int boarder)
         {
             var fibonacciService = new FibonacciService(new RedisCache<IEnumerable<int>>(HostName, RedisPrefix));
@@ -40,6 +41,7 @@ namespace Cache.Test
         [TestCase(223415)]
         [TestCase(35)]
         [TestCase(115)]
+        [TestCase(223415)]
         public void FibonacciMemory(int boarder)
         {
             var fibonacciService = new FibonacciService(new MemoryCache<IEnumerable<int>>(MemoryPrefix));
