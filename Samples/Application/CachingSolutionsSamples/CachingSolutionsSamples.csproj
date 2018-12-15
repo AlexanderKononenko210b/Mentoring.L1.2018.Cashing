@@ -72,6 +72,7 @@
     <Compile Include="FibonacciTask\FibonacciGenerator.cs" />
     <Compile Include="FibonacciTask\FibonacciService.cs" />
     <Compile Include="Interfaces\IMemoryCache.cs" />
+    <Compile Include="Managers\HelperManager.cs" />
     <Compile Include="Managers\MemoryCacheManager.cs" />
     <Compile Include="Interfaces\ICache.cs" />
     <Compile Include="Managers\RedisCacheManager.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Caching;
 
 namespace CachingSolutionsSamples.Interfaces
 {
@@ -13,7 +14,7 @@ namespace CachingSolutionsSamples.Interfaces
         /// </summary>
         /// <param name="user">The user identification.</param>
         /// <returns>The <see cref="T"/></returns>
-		T Get(string user);
+		T Get<T>(string user);
 
         /// <summary>
         /// Set data type <see cref="T"/> to cache.
@@ -21,6 +22,6 @@ namespace CachingSolutionsSamples.Interfaces
         /// <param name="user">The user identification.</param>
         /// <param name="data">The date.</param>
         /// <param name="dateTimeOffset">The date time offset.</param>
-		void Set(string user, T data, DateTimeOffset dateTimeOffset);
-	}
+		void Set<T>(string user, T data, DateTimeOffset dateTimeOffset);
+    }
 }

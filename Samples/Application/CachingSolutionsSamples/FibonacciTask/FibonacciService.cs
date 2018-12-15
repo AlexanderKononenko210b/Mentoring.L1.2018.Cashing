@@ -32,7 +32,7 @@ namespace CachingSolutionsSamples.FibonacciTask
             if (boarder < 0)
                 throw new ArgumentOutOfRangeException(nameof(boarder));
 
-            var sequenceNumbers = _cache.Get(FibonacciId);
+            var sequenceNumbers = _cache.Get<IEnumerable<int>>(FibonacciId);
             var workList = new List<int>();
 
             if (sequenceNumbers == null || sequenceNumbers.ToList().Count <= 2)

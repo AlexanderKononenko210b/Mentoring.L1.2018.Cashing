@@ -18,21 +18,21 @@ namespace CachingSolutionsSamples.CacheModels
         }
         
         ///<inheritdoc/>
-        public T Get(string user)
+        public T Get<T>(string user)
         {
             var key = $"{_prefix}{user}";
             return (T) _cache.Get(key);
         }
 
         ///<inheritdoc/>
-        public void Set(string user, T data, DateTimeOffset dateTimeOffset)
+        public void Set<T>(string user, T data, DateTimeOffset dateTimeOffset)
         {
             var key = $"{_prefix}{user}";
             _cache.Set(key, data, dateTimeOffset);
         }
 
         ///<inheritdoc/>
-        public void Set(string user, T data, CacheItemPolicy policy)
+        public void Set<T>(string user, T data, CacheItemPolicy policy)
         {
             var key = $"{_prefix}{user}";
             _cache.Set(key, data, policy);
