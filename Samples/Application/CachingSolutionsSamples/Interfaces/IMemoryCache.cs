@@ -13,6 +13,6 @@ namespace CachingSolutionsSamples.Interfaces
         /// <param name="user">The user identification.</param>
         /// <param name="data">The date.</param>
         /// <param name="cacheItemPolicy">The cache item policy.</param>
-        void Set(string user, T data, CacheItemPolicy cacheItemPolicy);
+        void Set<T>(string user, T data, CacheItemPolicy cacheItemPolicy);
     }
 }

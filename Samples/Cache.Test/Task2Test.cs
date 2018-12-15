@@ -35,7 +35,7 @@ namespace Cache.Test
         [Test]
         public void CategoryMemoryCacheWithDateTimeOffset()
         {
-            var categoryManager = new MemoryCacheManager<Category>(
+            var categoryManager = new MemoryCacheManager<IEnumerable<Category>>(
                 new MemoryCache<IEnumerable<Category>>(CategoryPrefix));
 
             for (var i = 0; i < 10; i++)
@@ -49,13 +49,14 @@ namespace Cache.Test
         [Test]
         public void CustomerMemoryCacheWithDateTimeOffset()
         {
-            var customerManager = new MemoryCacheManager<Customer>(
+            var customerManager = new MemoryCacheManager<IEnumerable<Customer>>(
                 new MemoryCache<IEnumerable<Customer>>(CustomerPrefix));
 
             for (var i = 0; i < 10; i++)
             {
                 var dateTimeOffset = new DateTimeOffset(DateTime.UtcNow.AddMilliseconds(_millisecondsOffset));
-                Console.WriteLine(customerManager.GetData(dateTimeOffset).Count());
+                var data = customerManager.GetData(dateTimeOffset);
+                Console.WriteLine(data.Count());
                 Thread.Sleep(100);
             }
         }
@@ -63,13 +64,14 @@ namespace Cache.Test
         [Test]
         public void OrderMemoryCacheWithDateTimeOffset()
         {
-            var orderManager = new MemoryCacheManager<Order>(
+            var orderManager = new MemoryCacheManager<IEnumerable<Order>>(
                 new MemoryCache<IEnumerable<Order>>(OrderPrefix));
 
             for (var i = 0; i < 10; i++)
             {
                 var dateTimeOffset = new DateTimeOffset(DateTime.UtcNow.AddMilliseconds(_millisecondsOffset));
-                Console.WriteLine(orderManager.GetData(dateTimeOffset).Count());
+                var data = orderManager.GetData(dateTimeOffset);
+                Console.WriteLine(data.Count());
                 Thread.Sleep(100);
             }
         }
@@ -77,12 +79,13 @@ namespace Cache.Test
         [Test]
         public void CategoryMemoryCacheWithCacheItemPolicy()
         {
-            var categoryManager = new MemoryCacheManager<Category>(
+            var categoryManager = new MemoryCacheManager<IEnumerable<Category>>(
                 new MemoryCache<IEnumerable<Category>>(CategoryPrefix));
 
             for (var i = 0; i < 10; i++)
             {
-                Console.WriteLine(categoryManager.GetData(_categoryQuery).Count());
+                var data = categoryManager.GetData(_categoryQuery);
+                Console.WriteLine(data.Count());
                 Thread.Sleep(100);
             }
         }
@@ -90,12 +93,13 @@ namespace Cache.Test
         [Test]
         public void CustomerMemoryCacheWithCacheItemPolicy()
         {
-            var customerManager = new MemoryCacheManager<Customer>(
+            var customerManager = new MemoryCacheManager<IEnumerable<Customer>>(
                 new MemoryCache<IEnumerable<Customer>>(CustomerPrefix));
 
             for (var i = 0; i < 10; i++)
             {
-                Console.WriteLine(customerManager.GetData(_customerQuery).Count());
+                var data = customerManager.GetData(_customerQuery);
+                Console.WriteLine(data.Count());
                 Thread.Sleep(100);
             }
         }
@@ -103,12 +107,13 @@ namespace Cache.Test
         [Test]
         public void OrderMemoryCacheWithCacheItemPolicy()
         {
-            var orderManager = new MemoryCacheManager<Order>(
+            var orderManager = new MemoryCacheManager<IEnumerable<Order>>(
                 new MemoryCache<IEnumerable<Order>>(OrderPrefix));
 
             for (var i = 0; i < 10; i++)
             {
-                Console.WriteLine(orderManager.GetData(_orderQuery).Count());
+                var data = orderManager.GetData(_orderQuery);
+                Console.WriteLine(data.Count());
                 Thread.Sleep(100);
             }
         }
@@ -116,7 +121,7 @@ namespace Cache.Test
         [Test]
         public void CategoryRedisCacheWithDateTimeOffset()
         {
-            var categoryManager = new RedisCacheManager<Category>(
+            var categoryManager = new RedisCacheManager<IEnumerable<Category>>(
                 new RedisCache<IEnumerable<Category>>(HostName, CategoryPrefix));
 
             for (var i = 0; i < 10; i++)
@@ -130,7 +135,7 @@ namespace Cache.Test
         [Test]
         public void CustomerRedisCacheWithDateTimeOffset()
         {
-            var customerManager = new RedisCacheManager<Customer>(
+            var customerManager = new RedisCacheManager<IEnumerable<Customer>>(
                 new RedisCache<IEnumerable<Customer>>(HostName, CustomerPrefix));
 
             for (var i = 0; i < 10; i++)
@@ -144,7 +149,7 @@ namespace Cache.Test
         [Test]
         public void OrderRedisCacheWithDateTimeOffset()
         {
-            var orderManager = new RedisCacheManager<Order>(
+            var orderManager = new RedisCacheManager<IEnumerable<Order>>(
                 new RedisCache<IEnumerable<Order>>(HostName, OrderPrefix));
 
             for (var i = 0; i < 10; i++)

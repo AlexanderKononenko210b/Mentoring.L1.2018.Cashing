@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Caching;
 using System.Runtime.Serialization;
 using CachingSolutionsSamples.Interfaces;
 using StackExchange.Redis;
@@ -27,7 +28,7 @@ namespace CachingSolutionsSamples.CacheModels
         }
 
         ///<inheritdoc/>
-        public T Get(string user)
+        public T Get<T>(string user)
         {
             var database = _redisConnection.GetDatabase();
 
@@ -43,7 +44,7 @@ namespace CachingSolutionsSamples.CacheModels
         }
 
         ///<inheritdoc/>
-        public void Set(string user, T data, DateTimeOffset dateTimeOffset)
+        public void Set<T>(string user, T data, DateTimeOffset dateTimeOffset)
         {
             var database = _redisConnection.GetDatabase();
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using CachingSolutionsSamples.CacheModels;
+using CachingSolutionsSamples.Interfaces;
 using NorthwindLibrary;
+
 
 namespace CachingSolutionsSamples.Managers
 {
@@ -13,13 +13,13 @@ namespace CachingSolutionsSamples.Managers
     public class RedisCacheManager<T>
         where T : class
     {
-        private readonly RedisCache<IEnumerable<T>> _redisCache;
+        private readonly ICache<T> _redisCache;
 
         /// <summary>
         /// Initialize a <see cref="RedisCacheManager{T}"/> instance.
         /// </summary>
         /// <param name="redisCache"></param>
-        public RedisCacheManager(RedisCache<IEnumerable<T>> redisCache)
+        public RedisCacheManager(ICache<T> redisCache)
         {
             _redisCache = redisCache;
         }
@@ -29,10 +29,10 @@ namespace CachingSolutionsSamples.Managers
         /// </summary>
         /// <param name="dateTimeOffset">The dateTimeOffset.</param>
         /// <returns>The  <see cref="IEnumerable{T}"/></returns>
-        public IEnumerable<T> GetData(DateTimeOffset dateTimeOffset)
+        public T GetData(DateTimeOffset dateTimeOffset)
         {
             var user = Thread.CurrentPrincipal.Identity.Name;
-            var orders = _redisCache.Get(user);
+            var orders = _redisCache.Get<T>(user);
 
             if (orders == null)
             {
@@ -42,15 +42,14 @@ namespace CachingSolutionsSamples.Managers
                 {
                     context.Configuration.ProxyCreationEnabled = false;
                     context.Configuration.LazyLoadingEnabled = false;
-                    orders = context.Set<T>().ToList();
-                    _redisCache.Set(user, orders, dateTimeOffset);
+                    var dbResult = DbDownloader<T>.GetResultFromDb(context);
+                    _redisCache.Set(user, dbResult, dateTimeOffset);
+
+                    return dbResult;
                 }
             }
-            else
-            {
-                Console.WriteLine("Data from cache:");
-            }
 
+            Console.WriteLine("Data from cache:");
             return orders;
         }
     }
