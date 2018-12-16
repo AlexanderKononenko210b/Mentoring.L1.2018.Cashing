@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using CachingSolutionsSamples.Interfaces;
 using NorthwindLibrary;
@@ -8,18 +9,19 @@ using NorthwindLibrary;
 namespace CachingSolutionsSamples.Managers
 {
     /// <summary>
-    /// Represents a <see cref="RedisCacheManager{T}"/> class.
+    /// Represents a <see cref="RedisCacheManager{TModel, TResult}"/> class.
     /// </summary>
-    public class RedisCacheManager<T>
-        where T : class
+    public class RedisCacheManager<TModel, TResult>
+        where TModel : class
+        where TResult : class
     {
-        private readonly ICache<T> _redisCache;
+        private readonly ICache<TResult> _redisCache;
 
         /// <summary>
-        /// Initialize a <see cref="RedisCacheManager{T}"/> instance.
+        /// Initialize a <see cref="RedisCacheManager{TModel, TResult}"/> instance.
         /// </summary>
         /// <param name="redisCache"></param>
-        public RedisCacheManager(ICache<T> redisCache)
+        public RedisCacheManager(ICache<TResult> redisCache)
         {
             _redisCache = redisCache;
         }
@@ -29,10 +31,10 @@ namespace CachingSolutionsSamples.Managers
         /// </summary>
         /// <param name="dateTimeOffset">The dateTimeOffset.</param>
         /// <returns>The  <see cref="IEnumerable{T}"/></returns>
-        public T GetData(DateTimeOffset dateTimeOffset)
+        public TResult GetData(DateTimeOffset dateTimeOffset)
         {
             var user = Thread.CurrentPrincipal.Identity.Name;
-            var orders = _redisCache.Get<T>(user);
+            var orders = _redisCache.Get<TResult>(user);
 
             if (orders == null)
             {
@@ -42,10 +44,10 @@ namespace CachingSolutionsSamples.Managers
                 {
                     context.Configuration.ProxyCreationEnabled = false;
                     context.Configuration.LazyLoadingEnabled = false;
-                    var dbResult = DbDownloader<T>.GetResultFromDb(context);
+                    var dbResult = context.Set<TModel>().ToList();
                     _redisCache.Set(user, dbResult, dateTimeOffset);
 
-                    return dbResult;
+                    return dbResult as TResult;
                 }
             }
 
