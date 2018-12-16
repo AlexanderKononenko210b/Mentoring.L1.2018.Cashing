@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Runtime.Caching;
 using System.Threading;
 using CachingSolutionsSamples.Interfaces;
@@ -8,20 +9,21 @@ using NorthwindLibrary;
 
 namespace CachingSolutionsSamples.Managers
 {
-    public class MemoryCacheManager<T>
-        where T : class
+    public class MemoryCacheManager<TModel, TResult>
+        where TModel : class
+        where TResult : class
     {
-        private readonly IMemoryCache<T> _memoryCache;
+        private readonly IMemoryCache<TResult> _memoryCache;
 
-        public MemoryCacheManager(IMemoryCache<T> memoryCache)
+        public MemoryCacheManager(IMemoryCache<TResult> memoryCache)
         {
             _memoryCache = memoryCache;
         }
 
-        public T GetData(DateTimeOffset dateTimeOffset)
+        public TResult GetData(DateTimeOffset dateTimeOffset)
         {
             var user = Thread.CurrentPrincipal.Identity.Name;
-            var items = _memoryCache.Get<T>(user);
+            var items = _memoryCache.Get<TResult>(user);
 
             if (items == null)
             {
@@ -32,11 +34,11 @@ namespace CachingSolutionsSamples.Managers
                     context.Configuration.ProxyCreationEnabled = false;
                     context.Configuration.LazyLoadingEnabled = false;
 
-                    var dbResult = DbDownloader<T>.GetResultFromDb(context);
+                    var dBResult = context.Set<TModel>().ToList();
 
-                    _memoryCache.Set(user, dbResult, dateTimeOffset);
+                    _memoryCache.Set(user, dBResult, dateTimeOffset);
 
-                    return dbResult;
+                    return dBResult as TResult;
                 }
             }
 
@@ -50,10 +52,10 @@ namespace CachingSolutionsSamples.Managers
         /// </summary>
         /// <param name="query">The query for create SqlDependency.</param>
         /// <returns>The  <see cref="IEnumerable{T}"/></returns>
-        public T GetData(string query)
+        public TResult GetData(string query)
         {
             var user = Thread.CurrentPrincipal.Identity.Name;
-            var items = _memoryCache.Get<T>(user);
+            var items = _memoryCache.Get<TResult>(user);
 
             if (items == null)
             {
@@ -64,11 +66,11 @@ namespace CachingSolutionsSamples.Managers
                     context.Configuration.ProxyCreationEnabled = false;
                     context.Configuration.LazyLoadingEnabled = false;
 
-                    var dbResult = DbDownloader<T>.GetResultFromDb(context);
+                    var dBResult = context.Set<TModel>().ToList();
 
-                    _memoryCache.Set(user, dbResult, GetCacheItemPolicy(query));
+                    _memoryCache.Set(user, dBResult, GetCacheItemPolicy(query));
 
-                    return dbResult;
+                    return dBResult as TResult;
                 }
             }
 
